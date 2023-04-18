@@ -1,6 +1,8 @@
 <?php
 
 namespace Database\Factories;
+use App\Models\Author;
+use App\Models\Genre;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,7 +20,8 @@ class BookFactory extends Factory
     {
         return [
             'title' => $this->faker->words($nb = rand(1,3), $asText = true),
-            'author' => $this->faker->name(),
+            'genre_id' => Genre::all()->random()->id,
+            'author_id' => Author::all()->random()->id,
             'slug' => $this->faker->slug(),
             'publisher' => $this->faker->company(),
             'description' => $this->faker->text($maxNbChars = 250),

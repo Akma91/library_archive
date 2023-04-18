@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\Author;
 use App\Models\Book;
+use App\Models\Genre;
 use App\Models\Post;
 use App\Models\User;
 
@@ -19,11 +21,17 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
              'name' => 'Admin User',
-             'email' => 'test@example.com',
+             'email' => 'admin@knjiznica.com',
          ]);
 
-        Post::factory(30)->create();
+         User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@knjiznica.com',
+        ]);
 
+        Post::factory(30)->create();
+        Author::factory(20)->create();
+        Genre::factory(10)->create();
         Book::factory(50)->create();
     }
 }

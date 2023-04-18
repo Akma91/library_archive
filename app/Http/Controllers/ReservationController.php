@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\BookRecommendationComposer;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 
@@ -24,12 +25,24 @@ class ReservationController extends Controller
 
         Reservation::create($reservationFormValues);
 
-        $book = Book::find(request()->book_id);
-        $book->reserved_to = request()->reserved_to;
-        $book->save();
+        $book = Book::find($reservationFormValues['book_id']);
+        $this->updateBookReservedTime($book, $reservationFormValues['reserved_to']);
+        $this->processBookForCustomerRecommendations($reservationFormValues['user_id'], $book);
 
         return back()
                 ->withInput()
                 ->with(['success' => 'Uspješno ste rezervirali posudbu!']);
+    }
+
+    private function updateBookReservedTime(Book $book, string $reservedTo)
+    {
+        $book->reserved_to = $reservedTo;
+        $book->save();
+    }
+
+    private function processBookForCustomerRecommendations(string $userId, Book $book)
+    {
+        $bookRecommendationComposer = new BookRecommendationComposer($userId);
+        $bookRecommendationComposer->process($book);
     }
 }
