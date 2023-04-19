@@ -28,7 +28,7 @@ class BookFactory extends Factory
             'language' => $this->faker->word(),
             'isbn' => $this->makeIsbn(),
             'published_at' => $this->faker->date($format = 'Y-m-d', $max = 'now'),
-            'reserved_to' => $this->faker->dateTimeBetween($startDate = 'now', $endDate = '+2 month'),
+            'reserved_to' => $this->faker->boolean(50) ? $this->faker->dateTimeBetween($startDate = 'now', $endDate = '+2 month') : null,
         ];
     }
 

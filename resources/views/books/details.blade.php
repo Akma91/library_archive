@@ -16,13 +16,15 @@
                 <h2>Rezervirajte posudbu:</h2>
                 <form method="POST" action="{{ route('reservation') }}">
                     @csrf
-                    <label class="formLabel"><strong>Knjiga je rezervirana do: </strong>{{ $book->reserved_to }}</label>
-
-                    {{-- Dodati slučaj kada nema početne rezervacije --}}
-                    <input type="hidden" name="reserved_from" value="{{ $book->reserved_to }}">
+                    @if(empty($book->reserved_to))
+                    <label class="formLabel"><strong>Knjiga je slobodna za rezervaciju</label>
+                    @else
+                        <label class="formLabel"><strong>Knjiga je rezervirana do: </strong>{{ $book->reserved_to }}</label>
+                        <input type="hidden" name="reserved_from" value="{{ $book->reserved_to }}">
+                    @endif
 
                     <label class="formLabel" for="reserved_to"><strong>Rezerviraj do:</strong></label>
-                    <input type="date" name="reserved_to" value="{{ date("Y-m-d") }}" 
+                    <input type="date" name="reserved_to" value="@if(empty($book->reserved_to)){{ date("Y-m-d") }}@else{{ $book->reserved_to }}@endif" 
                         min="{{ date("Y-m-d", strtotime ( '+1 day' , strtotime ( $book->reserved_to ) )) }}" 
                         max="{{ date("Y-m-d", strtotime ( '+1 month' , strtotime ( $book->reserved_to ) )) }}"
                     >

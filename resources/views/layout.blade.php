@@ -55,6 +55,10 @@
                 background-color: #f8f5f1;
             }
 
+            .postsWrapper {
+                margin-top: 0.5em;
+            }
+
             .postTitle {
                 border-bottom: 1px solid #ebebeb;
                 padding-bottom: 1em;
@@ -102,6 +106,34 @@
             }
 
             .bookCard:hover {
+                box-shadow: 0px 5px 6px 0px rgba(73, 73, 73, 0.3);
+                background-color: #fdfdfc;
+            }
+
+            .recommendedBooksOuter {
+                background-color: #7de0c7;
+                padding: 0 1.5em;
+                border-radius: 5px;
+            }
+
+            .recommendedBooks {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: space-between;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .recommendationBookCard {
+                flex: 0 1 15%;
+
+                margin: 0.5em;
+                padding: 0.5em;
+                box-shadow: 0px 3px 4px 0px rgba(73, 73, 73, 0.3);
+                background-color: #f8f5f1;
+            }
+
+            .recommendationBookCard:hover {
                 box-shadow: 0px 5px 6px 0px rgba(73, 73, 73, 0.3);
                 background-color: #fdfdfc;
             }
@@ -255,6 +287,21 @@
                 <h3>{{ session('error') }}</h3>
             </div>
         @endif
+
+        @auth
+        <div class="recommendedBooksOuter">
+            <div class="recommendedBooks">
+                @foreach ($customerBookRecommendations as $customerBookRecommendation)
+                    <a class="recommendationBookCard" href="/books/{{ $customerBookRecommendation->book->slug }}">
+                        <div>
+                            <h4>{{ $customerBookRecommendation->book->title }}</h4>
+                            Short description
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+        @endauth
 
         @yield('content')
 

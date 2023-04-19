@@ -10,4 +10,9 @@ class CustomerBookRecommendation extends Model
     use HasFactory;
 
     protected $fillable = ['user_id','book_id','criterion'];
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
 }
