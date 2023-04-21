@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\BookRecommendationComposer;
 use App\Models\Reservation;
+use App\Rules\DateNotReserved;
 use Illuminate\Http\Request;
 
 class ReservationController extends Controller
@@ -18,7 +19,8 @@ class ReservationController extends Controller
         }
 
         $reservationFormValues = request()->validate([
-            'reserved_to' => 'required|date',
+            'reserved_from' => 'required|date',
+            'reserved_to' => ['required', 'date', new DateNotReserved],
             'book_id' => 'required|integer',
             'user_id' => 'required|integer',
         ]);

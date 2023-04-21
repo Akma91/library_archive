@@ -25,12 +25,14 @@
 
                     <label class="formLabel" for="reserved_to"><strong>Rezerviraj do:</strong></label>
                     <input type="date" name="reserved_to" value="@if(empty($book->reserved_to)){{ date("Y-m-d") }}@else{{ $book->reserved_to }}@endif" 
-                        min="{{ date("Y-m-d", strtotime ( '+1 day' , strtotime ( $book->reserved_to ) )) }}" 
-                        max="{{ date("Y-m-d", strtotime ( '+1 month' , strtotime ( $book->reserved_to ) )) }}"
+                        min="@if(empty($book->reserved_to)){{date("Y-m-d")}}@else{{ date("Y-m-d", strtotime ( '+1 day' , strtotime ( $book->reserved_to ) )) }}@endif" 
+                        max="@if(empty($book->reserved_to)){{date("Y-m-d", strtotime('+1 month' , strtotime (date("Y-m-d"))))}}@else{{date("Y-m-d", strtotime('+1 month' , strtotime ($book->reserved_to)))}}@endif"
                     >
 
                     <input type="hidden" name="book_id" value="{{ $book->id }}">
 
+                    <input type="hidden" name="reserved_from" value="@if(empty($book->reserved_to)){{date("Y-m-d")}}@else{{ $book->reserved_to }}@endif">
+                    
                     @auth
                         <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
                     @endauth
