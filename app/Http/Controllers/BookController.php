@@ -10,8 +10,9 @@ class BookController extends Controller
     public function index()
     {
         return view('books.catalog', [
-            'books' => Book::latest()
-                    ->paginate(30)
+            'books' => Book::with('author')
+                ->orderBy('published_at', 'desc')
+                ->paginate(30)
         ]);
     }
 

@@ -60,8 +60,28 @@
             }
 
             .postTitle {
+                color: rgb(78, 78, 78);
                 border-bottom: 1px solid #ebebeb;
                 padding-bottom: 1em;
+            }
+
+            .postFooter {
+                border-top: 1px solid #ebebeb;
+                text-align: right;
+            }
+
+            .postFooter p {
+                margin-top: 0.5em;
+                margin-bottom: 0;
+                color: #929292;
+            }
+
+            .postFooter a {
+                margin-top: 1em;
+            }
+
+            .postFooter > a > p {
+                color: #1d4424;
             }
 
             a, a:visited, a:hover, a:active {
@@ -98,7 +118,7 @@
             }
 
             .bookCard {
-                min-height: 250px;;
+                min-height: 300px;;
                 margin: 0.5em;
                 padding: 1em;
                 box-shadow: 0px 3px 4px 0px rgba(73, 73, 73, 0.3);
@@ -111,7 +131,7 @@
             }
 
             .recommendedBooksOuter {
-                background-color: #7de0c7;
+                background-color: #c2d3bf;
                 padding: 0 1.5em;
                 border-radius: 5px;
             }
@@ -159,6 +179,19 @@
                 background-color:#DFCFBE;
             }
 
+            #bookQuery {
+                resize: none;
+                width: 100%;
+                padding: 0.5em;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            .bookOpenQueryForm form {
+                margin: 50px;
+            }
+
             .formLabel {
                 display: block;
                 clear: both;
@@ -169,7 +202,8 @@
                 clear: both;
             }
 
-            .submitButton {
+            #reservationSubmitButton {
+                width: 120px;
                 clear: both;
                 float: right;
                 background-color: #4fb652;
@@ -184,7 +218,28 @@
                 box-shadow: 0px 3px 4px 0px rgba(73, 73, 73, 0.3);
             }
 
-            .submitButton:hover {
+            #reservationSubmitButton:hover {
+                box-shadow: 0px 5px 6px 0px rgba(73, 73, 73, 0.3);
+            }
+
+            #querySubmitButton {
+                margin-top: 1em;
+                width: 120px;
+                clear: both;
+                float: right;
+                background-color: #4fb652;
+                border: none;
+                color: white;
+                padding: 0.5em;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                cursor: pointer;
+                box-shadow: 0px 3px 4px 0px rgba(73, 73, 73, 0.3);
+            }
+
+            #querySubmitButton:hover {
                 box-shadow: 0px 5px 6px 0px rgba(73, 73, 73, 0.3);
             }
 
@@ -252,6 +307,29 @@
             ::-webkit-datetime-edit-year-field {}
             ::-webkit-inner-spin-button { display: none; }
             ::-webkit-calendar-picker-indicator {}
+
+            .imagePlaceholder {
+                background-color: rgb(189, 189, 189);
+                min-width: 100%;
+                height: 200px;
+            }
+
+            .recommendationImagePlaceholder {
+                background-color: rgb(189, 189, 189);
+                min-width: 100%;
+                height: 120px;
+            }
+
+            .recommendationBookCard h4 {
+                font-size: 1em;
+                margin: 0.5em 0 0.2em 0;
+            }
+            
+
+            .recommendationBookCard p {
+                font-size: 0.8em;
+                margin: 0.5em 0 0.2em 0;
+            }
             
         </style>
     </head>
@@ -294,8 +372,9 @@
                 @foreach ($customerBookRecommendations as $customerBookRecommendation)
                     <a class="recommendationBookCard" href="/books/{{ $customerBookRecommendation->book->slug }}">
                         <div>
+                            <div class="recommendationImagePlaceholder"></div>
                             <h4>{{ $customerBookRecommendation->book->title }}</h4>
-                            Short description
+                            <p>{{ $customerBookRecommendation->book->author->name }}</p>
                         </div>
                     </a>
                 @endforeach
@@ -304,7 +383,5 @@
         @endauth
 
         @yield('content')
-
-
     </body>
 </html>

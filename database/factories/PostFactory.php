@@ -16,10 +16,28 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
+
+        $paragraphs = $this->faker->paragraphs(rand(6, 15));
+        $paragraphCounter = 0;
+
+        $exerpt = '';
+        $fullBody = '';
+
+        foreach($paragraphs as $paragraph) {
+            if($paragraphCounter < 5) {
+                $exerpt .= '<p>'.$paragraph.'</p>';
+            }
+
+            $fullBody .= '<p>'.$paragraph.'</p>';
+            $paragraphCounter ++;
+        }
+
         return [
             'title' => $this->faker->sentence(),
             'slug' => $this->faker->slug(),
-            'body' => '<p>' . implode('</p><p>', $this->faker->paragraphs(8)) . '</p>',
+            'exerpt' => $exerpt,
+            'body' => $fullBody,
+            'published_at' => $this->faker->dateTimeBetween('-3 year', 'now')
         ];
     }
 }

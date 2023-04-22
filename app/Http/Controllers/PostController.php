@@ -11,7 +11,15 @@ class PostController extends Controller
     {
         return view('home', [
             'posts' => Post::latest()
+                    ->orderBy('published_at', 'desc')
                     ->paginate(10)
+        ]);
+    }
+
+    public function details(Post $post)
+    {
+        return view('posts.details', [
+            'post' => $post
         ]);
     }
 }

@@ -13,11 +13,11 @@
 
         <div class="bookDetailsColumn">
             <div class="bookReservationForm">
-                <h2>Rezervirajte posudbu:</h2>
+                <h2>Rezervirajte posudbu</h2>
                 <form method="POST" action="{{ route('reservation') }}">
                     @csrf
                     @if(empty($book->reserved_to))
-                    <label class="formLabel"><strong>Knjiga je slobodna za rezervaciju</label>
+                    <label class="formLabel"><strong>Knjiga je slobodna za rezervaciju</strong></label>
                     @else
                         <label class="formLabel"><strong>Knjiga je rezervirana do: </strong>{{ $book->reserved_to }}</label>
                         <input type="hidden" name="reserved_from" value="{{ $book->reserved_to }}">
@@ -30,17 +30,22 @@
                     >
 
                     <input type="hidden" name="book_id" value="{{ $book->id }}">
-
                     <input type="hidden" name="reserved_from" value="@if(empty($book->reserved_to)){{date("Y-m-d")}}@else{{ $book->reserved_to }}@endif">
-                    
-                    @auth
-                        <input type="hidden" name="user_id" value="{{ auth()->user()->id }}">
-                    @endauth
 
-                    <button class="submitButton" type="submit">Rezerviraj</button>
+                    <button id="reservationSubmitButton" type="submit">Rezerviraj</button>
                 </form>
             </div>
         </div>
+    </div>
+    
+    <div>
+        <form method="POST" action="{{ route('openBookQuery') }}">
+            @csrf
+            <h2>Pošalji upit u vezi knjige</h2>
+            <textarea id="bookQuery" name="query_text" rows="10" cols="50" maxlength="500"></textarea>
+            <input type="hidden" name="book_id" value="{{ $book->id }}">
+            <button id="querySubmitButton" type="submit">Pošalji</button>
+        </form>
     </div>
 
 @endsection

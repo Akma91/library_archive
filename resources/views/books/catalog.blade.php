@@ -10,8 +10,9 @@
             <div class="bookColumn">
                 <a href="/books/{{ $book->slug }}">
                     <div class="bookCard">
-                        <h3 class="">{{ $book->title }}</h3>
-                        {!! $book->description !!}
+                        <div class="imagePlaceholder"> Image placeholder</div>
+                        <h3 class="">{{Str::limit($book->title, $limit = 25, $end = '...')}}</h3>
+                        {{Str::limit($book->author->name, $limit = 25, $end = '...')}}
                     </div>
                 </a>
             </div>

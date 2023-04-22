@@ -12,18 +12,13 @@ class ReservationController extends Controller
 {
     public function store()
     {
-        if((int)request()->user_id !== auth()->user()->id){
-            return back()
-                    ->withInput()
-                    ->with('error', 'Pokušaj neautorizirane rezervacije!');
-        }
-
         $reservationFormValues = request()->validate([
             'reserved_from' => 'required|date',
             'reserved_to' => ['required', 'date', new DateNotReserved],
             'book_id' => 'required|integer',
-            'user_id' => 'required|integer',
         ]);
+
+        $reservationFormValues['user_id'] = auth()->user()->id;
 
         Reservation::create($reservationFormValues);
 
