@@ -89,6 +89,21 @@
                 color:rgb(78, 78, 78);
             }
 
+            .adminHeader {
+                text-align: right;
+                position:sticky;
+                z-index: 1;
+                width: 100%;
+                background-color: #3d657c;
+            }
+
+            .adminHeader a {
+                display: inline-block;
+                padding-right: 1em;
+                color: #f8f5f1;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+
             .header a {
                 display: inline-block;
                 background: rgb(226, 226, 226);
@@ -146,7 +161,6 @@
 
             .recommendationBookCard {
                 flex: 0 1 15%;
-
                 margin: 0.5em;
                 padding: 0.5em;
                 box-shadow: 0px 3px 4px 0px rgba(73, 73, 73, 0.3);
@@ -227,6 +241,39 @@
                 width: 120px;
                 clear: both;
                 float: right;
+                background-color: #4fb652;
+                border: none;
+                color: white;
+                padding: 0.5em;
+                text-align: center;
+                text-decoration: none;
+                display: inline-block;
+                font-size: 16px;
+                cursor: pointer;
+                box-shadow: 0px 3px 4px 0px rgba(73, 73, 73, 0.3);
+            }
+
+            #postTitleInput {
+                padding: 0.5em;
+                height: 2em;
+                width: 100%;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            #publishFormName {
+                text-align: center;
+            }
+
+            #publishButtonSection {
+                text-align: right;
+                width: 100%;
+            }
+
+            #publishButton {
+                margin-top: 1em;
+                width: 120px;
                 background-color: #4fb652;
                 border: none;
                 color: white;
@@ -335,6 +382,16 @@
     </head>
     <body class="body">
 
+
+        @can('admin')
+            <div class="adminHeader">
+                <div class='adminNavSection'>
+                    <a href="{{ route('postCreate') }}" class=""><h4>Objavi</h4></a>
+                </div>
+            </div>
+        @endcan
+
+
         <div class="header">
             <div class='navSection'>
                 <a href="{{ route('home') }}" class=""><h2>Početna</h2></a>
@@ -367,19 +424,21 @@
         @endif
 
         @auth
-        <div class="recommendedBooksOuter">
-            <div class="recommendedBooks">
-                @foreach ($customerBookRecommendations as $customerBookRecommendation)
-                    <a class="recommendationBookCard" href="/books/{{ $customerBookRecommendation->book->slug }}">
-                        <div>
-                            <div class="recommendationImagePlaceholder"></div>
-                            <h4>{{ $customerBookRecommendation->book->title }}</h4>
-                            <p>{{ $customerBookRecommendation->book->author->name }}</p>
-                        </div>
-                    </a>
-                @endforeach
-            </div>
-        </div>
+            @cannot('admin')
+                <div class="recommendedBooksOuter">
+                    <div class="recommendedBooks">
+                        @foreach ($customerBookRecommendations as $customerBookRecommendation)
+                            <a class="recommendationBookCard" href="/books/{{ $customerBookRecommendation->book->slug }}">
+                                <div>
+                                    <div class="recommendationImagePlaceholder"></div>
+                                    <h4>{{ $customerBookRecommendation->book->title }}</h4>
+                                    <p>{{ $customerBookRecommendation->book->author->name }}</p>
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
+            @endcannot
         @endauth
 
         @yield('content')

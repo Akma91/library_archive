@@ -33,5 +33,7 @@ Route::get('books/{book:slug}', [BookController::class, 'details'])->name('bookD
 Route::post('reservation', [ReservationController::class, 'store'])->name('reservation')->middleware('auth');
 Route::post('open-book-query', [OpenBookQueryController::class, 'store'])->name('openBookQuery')->middleware('auth');
 
-//Route::get('posts/{post:slug}', [PostController::class, 'show']);
-//Route::post('posts/{post:slug}/comments', [PostCommentsController::class, 'store']);
+
+//ADMIN
+Route::get('post', [PostController::class, 'create'])->name('postCreate')->middleware('admin');
+Route::post('post', [PostController::class, 'store'])->name('publish')->middleware('admin');

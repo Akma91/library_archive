@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('thumbnail')->nullable();
             $table->text('exerpt');
-            $table->text('body');
+            $table->mediumText('body');
             $table->timestamps();
             $table->timestamp('published_at')->nullable();
         });
