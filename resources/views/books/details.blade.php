@@ -29,8 +29,16 @@
                         max="@if(empty($book->reserved_to)){{date("Y-m-d", strtotime('+1 month' , strtotime (date("Y-m-d"))))}}@else{{date("Y-m-d", strtotime('+1 month' , strtotime ($book->reserved_to)))}}@endif"
                     >
 
+                    @error('reserved_to')
+                        <p>{{ $message }}</p>
+                    @enderror
+
                     <input type="hidden" name="book_id" value="{{ $book->id }}">
                     <input type="hidden" name="reserved_from" value="@if(empty($book->reserved_to)){{date("Y-m-d")}}@else{{ $book->reserved_to }}@endif">
+
+                    @error('book_id')
+                        <p>{{ $message }}</p>
+                    @enderror
 
                     <button id="reservationSubmitButton" type="submit">Rezerviraj</button>
                 </form>

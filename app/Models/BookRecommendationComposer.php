@@ -10,13 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class BookRecommendationComposer extends Model
 {
-    const RECOMMENDATION_POOL_SIZE = 10;
-
     use HasFactory;
 
+    private const RECOMMENDATION_POOL_SIZE = 10;
+    private const RECOMMENDATION_CRITERIA = ['author', 'genre'];
+
     private int $customerId;
-    private Genre $genreToRecommendToUser;
-    private Author $authorToRecommendToUser;
+    private Model $criterionToRecommendToUser;
 
     function __construct($customerId) {
         $this->customerId = $customerId;
@@ -24,35 +24,47 @@ class BookRecommendationComposer extends Model
 
     public function process(Book $book)
     {
-        $this->genreToRecommendToUser = $book->genre;
-        $this->authorToRecommendToUser = $book->author;
+        foreach(self::RECOMMENDATION_CRITERIA as $criterion){
+            $this->criterionToRecommendToUser = $book->$criterion;
+            $bookByCriterion = $this->getRandomBookToRecommendBasedOnCriterion();
+            $this->storeRecommendationsForCustomer($bookByCriterion);
+        }
 
-        $bookByGenre = $this->getRandomBookToRecommendBasedOnGenre();
-        $bookByAuthor = $this->getRandomBookToRecommendBasedOnAuthor();
-
-        $this->storeRecommendationsForCustomer($bookByGenre, $bookByAuthor);
+        $this->deleteOutdatedRecommendations();
     }
 
-    private function storeRecommendationsForCustomer($bookByGenre, $bookByAuthor)
+    private function getRandomBookToRecommendBasedOnCriterion()
     {
-        if(!CustomerBookRecommendation::where('user_id',$this->customerId)->where('book_id',$bookByGenre->id)->exists()
-        ){
-            CustomerBookRecommendation::create([
-                'user_id' => $this->customerId,
-                'book_id' => $bookByGenre->id,
-                'criterion' => 'genre'
-            ]);
-        }
-    
-        if(!CustomerBookRecommendation::where('user_id',$this->customerId)->where('book_id',$bookByAuthor->id)->exists()
-        ){
-            CustomerBookRecommendation::create([
-                'user_id' => $this->customerId,
-                'book_id' => $bookByAuthor->id,
-                'criterion' => 'author'
-            ]);
-        }
+        $className = $this->getCurrentCriterionClassName();
 
+        return Book::where($className . '_id', $this->criterionToRecommendToUser->id)
+        ->get()
+        ->random(1)[0];
+    }
+
+    private function storeRecommendationsForCustomer($bookByCriterion)
+    {
+        $className = $this->getCurrentCriterionClassName();
+
+        if(!CustomerBookRecommendation::where('user_id',$this->customerId)->where('book_id',$bookByCriterion->id)->exists()
+        ){
+            CustomerBookRecommendation::create([
+                'user_id' => $this->customerId,
+                'book_id' => $bookByCriterion->id,
+                'criterion' => $className
+            ]);
+        }
+    }
+
+    private function getCurrentCriterionClassName() 
+    {
+        $classNameArray = explode("\\", $this->criterionToRecommendToUser::class);
+
+        return strtolower(end($classNameArray));
+    }
+
+    private function deleteOutdatedRecommendations() 
+    {
         $customerBookRecommendation = CustomerBookRecommendation::where('user_id', '=', $this->customerId)
             ->orderBy('created_at','DESC')
             ->get()
@@ -65,20 +77,5 @@ class BookRecommendationComposer extends Model
         {
             CustomerBookRecommendation::destroy($idsOfTheRecordsToDelete);
         }
-
-    }
-
-    private function getRandomBookToRecommendBasedOnGenre()
-    {
-        return Book::where('genre_id', '=', $this->genreToRecommendToUser->id)
-        ->get()
-        ->random(1)[0];
-    }
-
-    private function getRandomBookToRecommendBasedOnAuthor()
-    {
-        return Book::where('author_id', '=', $this->authorToRecommendToUser->id)
-        ->get()
-        ->random(1)[0];
     }
 }
