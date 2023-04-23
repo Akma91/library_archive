@@ -19,7 +19,8 @@ class SessionsController extends Controller
         if(auth()->attempt($loginFormValues)){
             session()->regenerate();
 
-            return redirect('/')->with('success', 'Uspješno ste prijavljeni!');
+            return redirect(request()->query('redirect') ? request()->query('redirect') : '/')
+                ->with('success', 'Uspješno ste prijavljeni!');
         }
 
         return back()

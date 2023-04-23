@@ -10,8 +10,14 @@
 
                 <label class="formLabel"><strong>Naslov</strong></label>
                 <input name="title" id="postTitleInput" maxlength="50" type="text">
+                @error('title')
+                    <p>{{ $message }}</p>
+                @enderror
                 <label class="formLabel"><strong>Text</strong></label>
                 <textarea id="bookQuery" name="body" rows="10" cols="50" maxlength="5000"></textarea>
+                @error('body')
+                    <p>{{ $message }}</p>
+                @enderror
                 <div id="publishButtonSection">
                     <button id="publishButton" type="submit">Objavi</button>
                 </div>

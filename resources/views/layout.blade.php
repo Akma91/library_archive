@@ -411,33 +411,11 @@
             </div>
         </div>
 
-        @if (session()->has('success'))
-            <div class='successMessage'>
-                <h3>{{ session('success') }}</h3>
-            </div>
-        @endif
-
-        @if (session()->has('error'))
-            <div class='errorMessage'>
-                <h3>{{ session('error') }}</h3>
-            </div>
-        @endif
+        <x-messages/>
 
         @auth
             @cannot('admin')
-                <div class="recommendedBooksOuter">
-                    <div class="recommendedBooks">
-                        @foreach ($customerBookRecommendations as $customerBookRecommendation)
-                            <a class="recommendationBookCard" href="/books/{{ $customerBookRecommendation->book->slug }}">
-                                <div>
-                                    <div class="recommendationImagePlaceholder"></div>
-                                    <h4>{{ $customerBookRecommendation->book->title }}</h4>
-                                    <p>{{ $customerBookRecommendation->book->author->name }}</p>
-                                </div>
-                            </a>
-                        @endforeach
-                    </div>
-                </div>
+            <x-recommender :customerBookRecommendations="$customerBookRecommendations" />
             @endcannot
         @endauth
 
